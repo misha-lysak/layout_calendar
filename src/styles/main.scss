@@ -1,3 +1,82 @@
+$size-of-box: 100px;
+$size-with-border: 101px;
+$margin-last: 606px;
+
+@mixin box {
+  height: $size-of-box;
+  line-height: $size-of-box;
+  min-width: $size-of-box;
+  margin: 0 1px 1px 0;
+  
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 30px;
+  
+  background-color: #eee;
+  border: 1px solid black;
+
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar {
+  display: flex;
+
+  width: $size-of-box * 7 + 7px;
+
+  flex-wrap: wrap;
+}
+
+@for $i from 1 through 31 {
+  .calendar div:nth-child(#{$i})::after {
+    display: none;
+
+    content: "#{$i}";
+  }
+}
+
+@for $i from 1 through 31 {
+  .calendar-#{$i} div:nth-child(-n+#{$i}) {
+    display: flex;
+    justify-content: center;
+
+    box-sizing: border-box;
+    
+    @include box;
+
+    &:hover {
+      margin-top: -20px;
+      margin-bottom: 0;
+      background-color: #ffbfcb;
+      transition-duration: 0.5s;
+      cursor: pointer;
+    }
+
+    &::after {
+      display: inline;
+    }
+  }
+}
+
+$order:
+  ("sun": $margin-last,
+  "sat": $margin-last - $size-with-border,
+  "fri": $margin-last - $size-with-border * 2,
+  "thu": $margin-last - $size-with-border * 3,
+  "wed": $margin-last - $size-with-border * 4,
+  "tue": $margin-last - $size-with-border * 5,
+  "mon": $margin-last - $size-with-border * 6
+);
+
+@each $name, $margins in $order {
+  .calendar-#{$name} div:first-child {
+    margin-left: $margins;
+  }
 }
